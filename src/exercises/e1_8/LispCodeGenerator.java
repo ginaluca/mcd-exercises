@@ -1,5 +1,5 @@
 
-package exercises.e1_8.context;
+package exercises.e1_8;
 
 import exercises.e1_3.parser.AstRoot;
 import exercises.e1_3.parser.DigitExpression;
