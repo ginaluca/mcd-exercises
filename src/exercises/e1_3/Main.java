@@ -6,8 +6,8 @@
 
 package exercises.e1_3;
 
-import exercises.e1_6.context.ConstantFolder;
-import exercises.e1_8.context.LispCodeGenerator;
+import exercises.e1_6.ConstantFolder;
+import exercises.e1_8.LispCodeGenerator;
 import exercises.e1_3.lexer.EofToken;
 import exercises.e1_3.lexer.Token;
 import exercises.e1_3.lexer.Lexer;

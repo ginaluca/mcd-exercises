@@ -6,15 +6,16 @@
 
 package exercises.e1_8;
 
-import exercises.e1_6.ConstantFolder;
 import exercises.e1_3.lexer.EofToken;
-import exercises.e1_3.lexer.Token;
 import exercises.e1_3.lexer.Lexer;
+import exercises.e1_3.lexer.Token;
 import exercises.e1_3.lexer.UnkownCharToken;
 import exercises.e1_3.parser.AstRoot;
 import exercises.e1_3.parser.Expression;
 import exercises.e1_3.parser.ParenExpression;
 import exercises.e1_3.parser.Parser;
+import exercises.e1_6.ConstantFolder;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -35,10 +36,8 @@ public class Main {
             System.out.println("Source: BEGIN" );
             System.out.println(s);
             System.out.println("Source: END" );
-            iterate(new Lexer(reader(s)));
             try {
                 AstRoot root = new ConstantFolder().annotate(new Parser(new Lexer(reader(s))).parseExpression());
-                render(root);
                 System.out.println("Lisp code:");
                 new LispCodeGenerator().generate(root, System.out);
                 System.out.println("");
@@ -52,40 +51,6 @@ public class Main {
         
     private static Reader reader(String string) {
         return new StringReader(string);
-    }
-
-    private static void iterate(Lexer lexer) throws IOException {
-        System.out.println("Tokens:");
-        int i = 1;
-        while(true) {
-            Token token = lexer.nextToken();
-            System.out.printf("  %d. %s\n",i++, token.toString());
-            if (token instanceof EofToken || token instanceof UnkownCharToken) {
-                break;
-            }
-        }
-    }
-
-    private static void render(AstRoot parseExpression) {
-        System.out.println("Parse tree:");
-                    doRender(parseExpression.getExpression(), 2);
-    }
-
-
-    private static void doRender(Expression parseExpression, int indent) {
-        System.out.printf("%s- %s\n", indentStr(indent), parseExpression.toString());
-        if (parseExpression instanceof ParenExpression) {
-            doRender(((ParenExpression) parseExpression).getLeft(), indent + 1);
-            doRender(((ParenExpression) parseExpression).getRight(), indent + 1);
-        }
-    }
-    
-    private static String indentStr(int indent ) {
-        StringBuilder v = new StringBuilder();
-        for (int i = 0; i < indent ; i++) {
-            v.append("    ");
-        }
-        return v.toString();
     }
 
 }
