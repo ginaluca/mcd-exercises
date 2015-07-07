@@ -1,0 +1,104 @@
+(ns mcd.paragraph2_5
+  (:use clojure.test))
+
+(def digit-lookup
+  (vec (map #(and (<= 48 %) (<= % 57)) (take 256 (iterate inc 0)))))
+  
+(def letter-lookup
+  (vec (map #(or (and (<= 97 %) (<= % 122)) (and (<= 65 %) (<= % 90))) (take 256 (iterate inc 0)))))
+
+(def bit-lookup
+  (vec (map (fn [b1 b2] (bit-or (if b1 0x1 0x0) (if b2 0x2 0x0))) digit-lookup letter-lookup)))
+  
+(defn letter? [c]
+  (< 0 (bit-and (bit-lookup (int c)) 0x2)))
+
+(defn digit? [c]
+  (< 0 (bit-and (bit-lookup (int c)) 0x1)))
+
+(defn layout? [c]
+  (= c \space))
+
+(defn underscore? [c]
+  (= c \_))
+
+(defn operator? [c]
+  ((set "+-*/") c))
+
+(defn separator? [c]
+  ((set ";,(){}") c))
+
+(defn recognize-integer [text acc]
+  (let [
+        f (first text)
+        accv (vec acc)]
+    (if f
+      (cond
+        (digit? f)
+        (recognize-integer (rest text) (conj accv f))
+        (layout? f)
+        {:token {:type :integer :repr accv} :remaining (rest text)}
+        :else {:token {:type :error :repr (conj accv f)} :remaining (rest text)})
+      {:token {:type :integer :repr accv} :remaining (rest text)})))
+  
+(defn recognize-identifier [text acc]
+  (let
+      [f (first text)
+       accv (vec acc)]
+    (if f
+      (cond
+        (or (digit? f) (letter? f))
+        (recognize-identifier (rest text) (conj accv f))
+        (layout? f)
+        (if (underscore? (last accv))
+          {:token {:type :error :repr (conj accv f)} :remaining (rest text)}
+          {:token {:type :identifier :repr accv} :remaining (rest text)})
+        (underscore? f)
+        (if (underscore? (last accv))
+          {:token {:type :error :repr (conj accv f)} :remaining (rest text)}
+          (recognize-identifier (rest text) (conj accv f)))
+        :else {:token {:type :error :repr (conj accv f)} :remaining (rest text)})
+      (if (underscore? (last accv))
+        {:token {:type :error :repr accv} :remaining (rest text)}
+        {:token {:type :identifier :repr accv} :remaining (rest text)}))))
+        
+(defn tokenize [text]
+  (let [f (first text)]
+    (if f
+      (cond
+        (digit? f)
+        (let [token (recognize-integer (rest text) (vector f))]
+              (conj (tokenize (token :remaining)) (token :token)))
+        (letter? f)
+        (let [token (recognize-identifier (rest text) (list f))]
+              (conj (tokenize (token :remaining)) (token :token)))
+        (layout? f)
+        (tokenize (rest text))
+        :else (conj (tokenize (rest text)) {:type :error :repr f}))
+      '())))
+
+(deftest test-digit
+  (are [challenge solution] (= solution (digit? challenge))
+       \0 true
+       \9 true
+       \a false
+       ))
+
+(deftest test-letter
+  (are [challenge solution] (= solution (letter? challenge))
+       \a true
+       \b true
+       \A true
+       \Z true
+       \0 false
+       \9 false
+       ))
+
+
+
+
+
+
+
+
+                 
