@@ -4,18 +4,17 @@
  * and open the template in the editor.
  */
 
-package book.chapter1.exercises.e1_3;
+package exercises.e1_6;
 
-import book.chapter1.exercises.e1_6.context.ConstantFolder;
-import book.chapter1.exercises.e1_8.context.LispCodeGenerator;
-import book.chapter1.exercises.e1_3.lexer.EofToken;
-import book.chapter1.exercises.e1_3.lexer.Token;
-import book.chapter1.exercises.e1_3.lexer.Lexer;
-import book.chapter1.exercises.e1_3.lexer.UnkownCharToken;
-import book.chapter1.exercises.e1_3.parser.AstRoot;
-import book.chapter1.exercises.e1_3.parser.Expression;
-import book.chapter1.exercises.e1_3.parser.ParenExpression;
-import book.chapter1.exercises.e1_3.parser.Parser;
+import exercises.e1_3.lexer.EofToken;
+import exercises.e1_3.lexer.Lexer;
+import exercises.e1_3.lexer.Token;
+import exercises.e1_3.lexer.UnkownCharToken;
+import exercises.e1_3.parser.AstRoot;
+import exercises.e1_3.parser.Expression;
+import exercises.e1_3.parser.ParenExpression;
+import exercises.e1_3.parser.Parser;
+import exercises.e1_8.LispCodeGenerator;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -37,13 +36,9 @@ public class Main {
             System.out.println("Source: BEGIN" );
             System.out.println(s);
             System.out.println("Source: END" );
-            iterate(new Lexer(reader(s)));
             try {
                 AstRoot root = new ConstantFolder().annotate(new Parser(new Lexer(reader(s))).parseExpression());
                 render(root);
-                System.out.println("Lisp code:");
-                new LispCodeGenerator().generate(root, System.out);
-                System.out.println("");
             } catch (Exception e) {
                 System.out.println("Failed to parse with error: " + e.getMessage());
             }
@@ -54,18 +49,6 @@ public class Main {
         
     private static Reader reader(String string) {
         return new StringReader(string);
-    }
-
-    private static void iterate(Lexer lexer) throws IOException {
-        System.out.println("Tokens:");
-        int i = 1;
-        while(true) {
-            Token token = lexer.nextToken();
-            System.out.printf("  %d. %s\n",i++, token.toString());
-            if (token instanceof EofToken || token instanceof UnkownCharToken) {
-                break;
-            }
-        }
     }
 
     private static void render(AstRoot parseExpression) {
