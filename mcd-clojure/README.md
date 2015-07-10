@@ -3,17 +3,17 @@ Exercise 2.1
 ------------
 
 To execute the code:
-- git clone the project and open a shell inside mcd-clojure
+- ```git clone``` the project and open a shell inside mcd-clojure
 - launch ```lein repl``` (instructions to install Leiningen on http://leiningen.org)
-- on lein repl, launch 
+- on the REPL, launch 
 ```lisp
 (use 'mcd.exercise2_1)
 ```
-- load the file in memory with
+- load the input file in memory with
 ```lisp
-(def input (slurp "/home/gianluca/sw/mcd-exercises/abcabc-input.txt"))
+(def input (slurp "/path/to/input/file"))
 ```
-- lanch (and time) the lexycal analysis with
+- launch (and time) the lexycal analysis with
 ```lisp
 (time (doall (tokenize input)))
 ```
