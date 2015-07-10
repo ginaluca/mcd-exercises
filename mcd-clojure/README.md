@@ -17,4 +17,4 @@ To execute the code:
 ```lisp
 (time (doall (tokenize input)))
 ```
-(the ```doall``` is needed to realize the lazy list obtained from ```tokenize```, thereby making sure that the computation actually happens within ```time```'s execution
+The ```doall``` is needed to realize the lazy list obtained from ```tokenize```, thereby making sure that the computation actually happens within ```time```'s execution
