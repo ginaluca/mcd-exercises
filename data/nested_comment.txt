@@ -1,0 +1,7 @@
+    [this is a comment
+
+[with a comment inside
+[[[[[[[]]]]]]]
+] [c][o][m][m][e][n][t]
+plus some more text in the outer comment
+ ] [, one last top level comment] and finally some code.
