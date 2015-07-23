@@ -1,6 +1,24 @@
 (ns mcd.paragraph2_5
   (:use clojure.test))
 
+                                        ; Code for paragraph 2.5 'Creating a lexical analyzer by hand'
+                                        ; Try out this code by executing (tokenize "id 123 id123 1error")
+
+(defn tokenize [text]
+  (let [f (first text)]
+    (if f
+      (cond
+        (digit? f)
+        (let [token (recognize-integer (rest text) (vector f))]
+              (conj (tokenize (token :remaining)) (token :token)))
+        (letter? f)
+        (let [token (recognize-identifier (rest text) (list f))]
+              (conj (tokenize (token :remaining)) (token :token)))
+        (layout? f)
+        (tokenize (rest text))
+        :else (conj (tokenize (rest text)) {:type :error :repr f}))
+      '())))
+
 (def digit-lookup
   (vec (map #(and (<= 48 %) (<= % 57)) (take 256 (iterate inc 0)))))
   
@@ -61,21 +79,6 @@
       (if (underscore? (last accv))
         {:token {:type :error :repr accv} :remaining (rest text)}
         {:token {:type :identifier :repr accv} :remaining (rest text)}))))
-        
-(defn tokenize [text]
-  (let [f (first text)]
-    (if f
-      (cond
-        (digit? f)
-        (let [token (recognize-integer (rest text) (vector f))]
-              (conj (tokenize (token :remaining)) (token :token)))
-        (letter? f)
-        (let [token (recognize-identifier (rest text) (list f))]
-              (conj (tokenize (token :remaining)) (token :token)))
-        (layout? f)
-        (tokenize (rest text))
-        :else (conj (tokenize (rest text)) {:type :error :repr f}))
-      '())))
 
 (deftest test-digit
   (are [challenge solution] (= solution (digit? challenge))
