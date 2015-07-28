@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
-public class Main {
+public class AbcAbcRecognizer {
     private final static short STATE_EMPTY = 0;
     private final static short STATE_A1 = 1;
     private final static short STATE_B1 = 2;
@@ -55,22 +55,6 @@ public class Main {
         STATE_EMPTY        
     };
 
-    private static int charToIndex(int c) {
-        switch (c) {
-            case 97:
-                return 0;
-            case 98:
-                return 1;
-            case 99:
-                return 2;
-            default:
-                return 3;
-        }
-    }
-    
-    public Main(Reader reader) throws IOException {
-    }
-    
     public static void main(String[] args) throws FileNotFoundException, IOException {
         long t0 = System.currentTimeMillis();
         
@@ -96,5 +80,20 @@ public class Main {
         System.out.println(occurrences);
         System.out.println("time: " + (System.currentTimeMillis() - t0));
     } 
-   
+
+    private static int charToIndex(int c) {
+        switch (c) {
+            case 97:
+                return 0;
+            case 98:
+                return 1;
+            case 99:
+                return 2;
+            default:
+                return 3;
+        }
+    }
+    
+    public AbcAbcRecognizer(Reader reader) throws IOException {
+    }   
 }
