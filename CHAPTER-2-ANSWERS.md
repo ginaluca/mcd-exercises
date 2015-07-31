@@ -35,23 +35,23 @@ Apart form this inconvenient, the trick would prevent the lexical analyzer from 
 Exercise 2.5
 ============
 
-The description of the Algol 68 *format* given in the exercise is too concise, probably incomplete. The first example, <code>$3d$</code>, is followed by the more complicated <code>$n(2*a)d$</code> without explaining where that <code>n</code> comes from. It then says that a *format* can contain function calls, but doesn't specify what kind of function you might find inside it. I guess arithmetic functions, since the example was about numbers. But then I'm confused by the statement that a function call might have formats as parameters: formats are started and ended by the same charachter <code>$</code>, how can they be nested without creating ambiguity?
+The description of the Algol 68 *format* given in the exercise is too concise, probably incomplete. The first example, <code>$3d$</code>, is followed by the more complicated <code>$n(2\*a)d$</code> without explaining where that <code>n</code> comes from. It then says that a *format* can contain function calls, but doesn't specify what kind of function you might find inside it. I guess arithmetic functions, since the example was about numbers. But then I'm confused by the statement that a function call might have formats as parameters: formats are started and ended by the same character <code>$</code>, how can they be nested without creating ambiguity?
 
 Exercise 2.6
 ============
 
-(a) <code>0*10*10*</code>
+(a) <code>0\*10\*10*</code>
 
-(b) <code>0*(10*10*)*</code>
+(b) <code>0\*(10\*10\*)\*</code>
 
-Note 1: I might have reused the first expression to construct the second one like <code>(0*10*10*)*</code>, but that would have resulted in an ambiguous expression.
+Note 1: I might have reused the first expression to construct the second one like <code>(0\*10\*10\*)\*</code>, but that would have resulted in an ambiguous expression.
 
-Note 2: after writing the second expression I wondered: does the <code>(10*10*)*</code> describe a (potentially empty) sequence of sequences of <code>0</code> and <code>1</code>, all of which follow the pattern  <code>10*10*</code>? Or does it describe one of the possible productions of <code>10*10*/code>, repeated an arbitrary number of times (including zero times)? I'm sure that the first option is the right one, and therefore the expression given in (b) is a correct solution, but in order to provide some formal basis to this answer I need to go back to the grammar which is the origin of (b):
+Note 2: after writing the second expression I wondered: does the <code>(10\*10\*)\*</code> describe a (potentially empty) sequence of sequences of <code>0</code> and <code>1</code>, all of which follow the pattern  <code>10\*10\*</code>? Or does it describe one of the possible productions of <code>10\*10\*/code>, repeated an arbitrary number of times (including zero times)? I'm sure that the first option is the right one, and therefore the expression given in (b) is a correct solution, but in order to provide some formal basis to this answer I need to go back to the grammar which is the origin of (b):
 
-- <code>sequence_with_two_ones -> 10*10*</code>
-- <code>even_sequence -> 0* sequence_with_two_ones*</code>
+- <code>sequence_with_two_ones -> 10\*10\*</code>
+- <code>even_sequence -> 0\* sequence_with_two_ones\*</code>
 
-Since <code>even_sequence</code> is the start symbol of the grammar, in any derivation the second production rule is the first to be executed, generating a sentential form with a number of  <code>sequence_with_two_ones</code>. Each subsequent production step always involves the first rule, replacing an instance of <code>sequence_with_two_ones</code> with a (potentially novel) sequence conforming to <code>10*10*</code>.
+Since <code>even_sequence</code> is the start symbol of the grammar, in any derivation the second production rule is the first to be executed, generating a sentential form with a number of  <code>sequence_with_two_ones</code>. Each subsequent production step always involves the first rule, replacing an instance of <code>sequence_with_two_ones</code> with a (potentially novel) sequence conforming to <code>10\*10\*</code>.
 
 Exercise 2.7
 ============
@@ -61,18 +61,18 @@ The pattern <code>.</code> usually excludes the new line because token don't cro
 Exercise 2.8
 ============
 
-<code>a?*</code> is equivalent to <code>(a?)*</code>, and it's not erroneous.
+<code>a?\*</code> is equivalent to <code>(a?)\*</code>, and it's not erroneous.
 
 The following derivation:
-1. <code>(a?)*</code>
+1. <code>(a?)\*</code>
 1. <code>(a?)(a?)</code>
 1. <code>()(a?)</code> 
 1. <code>()(a)</code> 
 
 and this other derivation:
-1. <code>(a?)*</code>
+1. <code>(a?)\*</code>
 1. <code>(a?)(a?)</code>
 1. <code>(a?)()</code> 
 1. <code>(a)()</code> 
 
-Are different, but produce the same string. Therefore <code>a?*</code> is ambiguous.
+Are different, but produce the same string. Therefore <code>a?\*</code> is ambiguous.
