@@ -124,3 +124,26 @@ Regular description:
 Regular expression:
 
 <code>(letter ((((letter | digit) | ‘-‘)+)? (letter | digit))?) | URL ‘.’ (letter ((((letter | digit) | ‘-‘)+)? (letter | digit))?)</code>
+
+Exercise 2.10
+=============
+
+Original implementation of the <code>skip_layout_and_comment</code> function:
+
+```
+void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_char();} 
+    while (is_comment_starter(input_char)) {        next_char();        while (!is_comment_stopper(input_char)) {            if (is_end_of_input(input_char)) return; 
+            next_char();        }        next_char();        while (is_layout(input_char)) {next_char();}    } 
+}```
+
+The function is designed to handle an input like below:
+<code>  # comment # # comment # rest of the program</code>
+The input is composed of an optional prefix of layout characters, followed by zero or more comments, followed by optional layout characters and finally by code which is neither layout or comment. The comment might be separated by zero, one or more layout characters.
+
+The first <code>while</code> block skips the layout characters of the prefix until a comment or something else is found. Each iteration of the second <code>while</code> block skips a comment and the optional layout characters which separate it from the next comment or from the first non-layout, non-comment character. Its body contains:
+
+1. a <code>next_char();</code> instruction which skips the comment-start character;
+2. a <code>while</code> block which skips the content of the comment, comment-end excluded;
+3. a <code>next_char();</code> instruction which skips the comment-end character;
+4. a <code>while</code> block which skips the layout characters which separate the previous comment from what follows.
+
