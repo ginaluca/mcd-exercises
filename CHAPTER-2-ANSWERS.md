@@ -46,7 +46,7 @@ Exercise 2.6
 
 Note 1: I might have reused the first expression to construct the second one like <code>(0\*10\*10\*)\*</code>, but that would have resulted in an ambiguous expression.
 
-Note 2: after writing the second expression I wondered: does the <code>(10\*10\*)\*</code> describe a (potentially empty) sequence of sequences of <code>0</code> and <code>1</code>, all of which follow the pattern  <code>10\*10\*</code>? Or does it describe one of the possible productions of <code>10\*10\*/code>, repeated an arbitrary number of times (including zero times)? I'm sure that the first option is the right one, and therefore the expression given in (b) is a correct solution, but in order to provide some formal basis to this answer I need to go back to the grammar which is the origin of (b):
+Note 2: after writing the second expression I wondered: does the <code>(10\*10\*)\*</code> describe a (potentially empty) sequence of sequences of <code>0</code> and <code>1</code>, all of which follow the pattern  <code>10\*10\*</code>? Or does it describe one of the possible productions of <code>10\*10\*</code>, repeated an arbitrary number of times (including zero times)? I'm sure that the first option is the right one, and therefore the expression given in (b) is a correct solution, but in order to provide some formal basis to this answer I need to go back to the grammar which is the origin of (b):
 
 - <code>sequence_with_two_ones -> 10\*10\*</code>
 - <code>even_sequence -> 0\* sequence_with_two_ones\*</code>
