@@ -64,15 +64,17 @@ Exercise 2.8
 <code>a?\*</code> is equivalent to <code>(a?)\*</code>, and it's not erroneous.
 
 The following derivation:
+
 1. <code>(a?)\*</code>
-1. <code>(a?)(a?)</code>
-1. <code>()(a?)</code> 
-1. <code>()(a)</code> 
+2. <code>(a?)(a?)</code>
+3. <code>()(a?)</code> 
+4. <code>()(a)</code> 
 
 and this other derivation:
+
 1. <code>(a?)\*</code>
-1. <code>(a?)(a?)</code>
-1. <code>(a?)()</code> 
-1. <code>(a)()</code> 
+2. <code>(a?)(a?)</code>
+3. <code>(a?)()</code> 
+4. <code>(a)()</code> 
 
 Are different, but produce the same string. Therefore <code>a?\*</code> is ambiguous.
