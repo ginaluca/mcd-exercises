@@ -78,3 +78,49 @@ and this other derivation:
 4. <code>(a)()</code> 
 
 Are different, but produce the same string. Therefore <code>a?\*</code> is ambiguous.
+
+<code>a\*\*</code> is equivalent to <code>(a\*)\*</code>, and it's not erroneous.
+
+The following derivation:
+
+1. <code>(a\*)\*</code>
+2. <code>(a\*)(a\*)</code>
+3. <code>()(a\*)</code> 
+4. <code>()(a)</code> 
+
+and this other derivation:
+
+1. <code>(a\*)\*</code>
+2. <code>(a\*)(a\*)</code>
+3. <code>(a\*)()</code> 
+4. <code>(a)()</code> 
+
+Are different, but produce the same string. Therefore <code>a\*\*</code> is ambiguous.
+
+Exercise 2.9
+============
+
+Note: I assume that there is a typo in the text of the exercise and the second production rule is actually 
+<code>label -> letter (letgit_hyphen_string? letgit)?</code>
+and not
+<code>label -> letter ‘(‘ letgit_hyphen_string? letgit ‘)’?</code>
+
+Original grammar:
+
+1. <code>URL -> label | URL ‘.’ label</code>
+2. <code>label -> letter (letgit_hyphen_string? letgit)?</code>
+3. <code>letgit_hyphen_string -> letgit_hyphen | letgit_hyphen letgit_hyphen_string</code>
+4. <code>letgit_hyphen -> letgit | ‘-‘</code>
+5. <code>legit -> letter | digit</code>
+
+Regular description:
+
+1. <code>legit -> letter | digit</code>
+2. <code>letgit_hyphen -> letgit | ‘-‘</code>
+3. <code>letgit_hyphen_string -> letgit_hyphen+</code>
+4. <code>label -> letter (letgit_hyphen_string? letgit)?</code>
+5. <code>URL -> label | URL ‘.’ label</code>
+
+Regular expression:
+
+<code>(letter ((((letter | digit) | ‘-‘)+)? (letter | digit))?) | URL ‘.’ (letter ((((letter | digit) | ‘-‘)+)? (letter | digit))?)</code>
