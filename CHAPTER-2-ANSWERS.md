@@ -130,15 +130,17 @@ Exercise 2.10
 
 Original implementation of the <code>skip_layout_and_comment</code> function:
 
-```
+```java
 void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_char();} 
     while (is_comment_starter(input_char)) {        next_char();        while (!is_comment_stopper(input_char)) {            if (is_end_of_input(input_char)) return; 
             next_char();        }        next_char();        while (is_layout(input_char)) {next_char();}    } 
 }```
 
 The function is designed to handle an input like below:
-<code>  # comment # # comment # rest of the program</code>
-The input is composed of an optional prefix of layout characters, followed by zero or more comments, followed by optional layout characters and finally by code which is neither layout or comment. The comment might be separated by zero, one or more layout characters.
+```
+  [ comment ] [ comment ] rest of the program
+```
+assuming that <code>[</code> and <code>]</code> represent the start and end of a comment, respectively. The input is composed of an optional prefix of layout characters, followed by zero or more comments, followed by optional layout characters and finally by code which is neither layout or comment. The comment might be separated by zero, one or more layout characters.
 
 The first <code>while</code> block skips the layout characters of the prefix until a comment or something else is found. Each iteration of the second <code>while</code> block skips a comment and the optional layout characters which separate it from the next comment or from the first non-layout, non-comment character. Its body contains:
 
@@ -147,3 +149,41 @@ The first <code>while</code> block skips the layout characters of the prefix unt
 3. a <code>next_char();</code> instruction which skips the comment-end character;
 4. a <code>while</code> block which skips the layout characters which separate the previous comment from what follows.
 
+The exercise requires to modify the function to make it able to handle nested comments, like below:
+
+```
+  [ comment [ comment [ comment ] comment ] comment [ comment ] comment ] [ comment ] rest of the program
+```
+
+Let’s modify the body of the second <code>while</code> block, so that it will be able to skip a comment which might contain other comments, arbitrarily nested. 
+
+Comments with nesting level > 0 can be separated by non layout characters, which are the text content of the enclosing comment. Skipping these comment requires a modified version of the original block to address this difference. The new code is also packaged as a function to allow recursive calls, following the nesting of comments.
+
+```java
+// Called with cursor on the opening comment starter.
+// If it returns because of comment starter or end, on return the 
+// cursor is still on that character.
+void skip_nested_comment() {    next_char();    while (!is_comment_end(input_char))) {
+        if (is_end_of_input(input_char)) return; 
+        if (is_comment_starter(input_char)) {
+            skip_nested_comment();
+        } else {
+            next_char();
+        }
+    } 
+    next_char();
+    while (!is_comment_starter(input_char) &&
+           !is_comment_end(input_char)) {
+        next_char();
+        if (is_end_of_input(input_char)) return; 
+    }}```
+
+```java
+void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_char();} 
+    while (is_comment_starter(input_char)) {        next_char();        while (!is_comment_stopper(input_char)) {            if (is_end_of_input(input_char)) return; 
+            if (is_comment_starter(input_char)) {
+                skip_nested_comment();
+            } else {
+                next_char();
+            }        }        next_char();        while (is_layout(input_char)) {next_char();}    } 
+}```
