@@ -187,3 +187,57 @@ void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_cha
                 next_char();
             }        }        next_char();        while (is_layout(input_char)) {next_char();}    } 
 }```
+
+Exercise 2.11
+=============
+
+If it is possible that `/` can appear outside a comment without being followed by `*`, then I don’t know how to implement the requested function, and I doubt that it is even possible. In such a scenario, an example input like
+```
+  program code /Program code
+```  
+would be legal. The problem with the implementation is that the function would need to read the `P` in order to understand that the preceding `/` is not the first character of a comment starter. Upon return, that `/` would be incorrectly skipped and therefore unavailable to the rest of the analyser.
+
+Under the assumption that the circumstance above is not allowed, I first define two functions to recognise comment starter and comment stopper composed of the 2 characters `/` and `*`. The functions is defined as follows:
+
+```java
+/*
+Assumes that a ’/‘ will be followed by a ‘*’.
+
+Must be invoked with the cursor over the character which might be the ‘/‘.
+If the comment starter is recognised, then on function return the cursor is
+over the ‘*’. Otherwise, on function return the cursor is at the same position 
+that it was at function entry.
+*/
+boolean recognise_comment_starter(void) {
+    if (input_char != ‘/‘) {
+        return false;
+    }
+    next_char();
+    return true;
+}```
+
+```java
+/*
+Must be invoked with the cursor over the character which might be the ‘*‘.
+If the comment stopper is recognised, then on function return the cursor is
+over the ‘/’. Otherwise, on function return the cursor is one character further 
+that it was at function entry.
+*/
+boolean recognise_comment_stopper(void) {
+    if (input_char != ‘*‘) {
+        next_char();
+        return false;
+    }
+    next_char();
+    if (input_char != ‘/‘) {
+        return false;
+    }
+    return true;
+}```
+
+And this is how the original function gets modified:
+```java
+void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_char();} 
+    while (recognise_comment(input_char)) {        next_char();        while (!recognise_comment_stopper(input_char)) {            if (is_end_of_input(input_char)) return; 
+        }        next_char();        while (is_layout(input_char)) {next_char();}    } 
+}```
