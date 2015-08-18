@@ -241,3 +241,50 @@ void skip_layout_and_comment(void) {    while (is_layout(input_char)) {next_cha
     while (recognise_comment(input_char)) {        next_char();        while (!recognise_comment_stopper(input_char)) {            if (is_end_of_input(input_char)) return; 
         }        next_char();        while (is_layout(input_char)) {next_char();}    } 
 }```
+
+Exercise 2.12
+=============
+I would be just fine with it.
+
+
+Exercise 2.13
+=============
+
+The `for each` loop is necessary to make sure that the longest match is checked. If more than one match is found for the same regular expression, disambiguation is performed by taking the longest match. 
+
+Exercise 2.14
+=============
+
+I’m not sure about the name of these items, but just as the ‘non-basic’ ones they are processed by some Ɛ-move to result in a basic item.
+
+Exercise 2.15
+=============
+
+A first solution, simple, but not efficient: before starting, I reduce the regular expression to a ‘conventional’ one by replacing the `≣` character with all the possible character sequences that it stands for, i.e.:
+`(aa)|(bb)|(cc)|. . .`
+where `a`, `b`, `c`, etc. are all the characters which can be found in the input. If the regular expression contains `≣` more than once, the different occurrences must be replaced in all possible combinations. This means that with e.g. a regular expression `≣≣` and `n` possible input characters, the replacement would generate `n^2` expressions.
+
+For a more efficient, but more complex solution: breaking the rules, we allow the `≣` to temporarily change in a  character sequence during the transformation. If the dot is in front of `≣`, upon reading one character from the input, e.g. `a`, the `≣` breaks into two characters, `≢` (another character which cannot appear in the input) and `a`. After the dot moves past `a`, the two characters recompose in `≣` and the processing proceeds as usual. If the dot is after `≣` and needs to be moved back because of a Ɛ-move, the `≣` character will be treated as a single object, and the dot will end up just before it.
+
+Exercise 2.16
+=============
+
+About the following rule:
+```
+T → α.(R)?β  ⟹  T → α(.R)?β
+                  T → α(R)?.β
+```
+In the left hand side item, the dot is in front of a non-basic pattern consisting in the expression `R` with the optional operator applied to it. A successful matching might continue by finding the start of `R` (in case the input sequence was obtained with a derivation in which a production step replaced `(R)?` with nothing) or the start of `β` (in case `(R)?` was replaced with nothing). In order to be prepared to continue the matching in both cases, the Ɛ-move replace the original item with two items: the first one has the dot in front of `R`, so that if the input presents the start of `R` the dot will move past `R` (if it is made of a single basic pattern) or inside it. The second expression has the dot after `(R)?` to handle the situation in which `α` is immediately followed by `β`.
+
+Exercise 2.17
+=============
+
+The exercise show already the solution, which I confirm valid.
+
+Exercise 2.18
+=============
+
+
+
+
+
